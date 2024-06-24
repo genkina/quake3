@@ -58,7 +58,6 @@ function analisarLog(caminhoArquivo) {
                 case regexMatar.test(linha):
                     tipoLinha = 'Client';
                     break;
-
                 default:
                     tipoLinha = 'Item';
             }
@@ -103,8 +102,10 @@ function analisarLog(caminhoArquivo) {
                     break;
                 case 'Client':
                     // chamar função que gerencia clientes
+                    break;
                 case 'Item':
                     // chamar função para printar na tela do player caso bandeira capturada
+                    break;
             }
         });
 
@@ -135,14 +136,14 @@ function gerarRelatorio(partidas) {
         for (const [jogador, kills] of Object.entries(partida.kills)) {
             console.log(`    ${jogador}: ${kills}`);
         }
-        console.log('  kills_by_means:');
+        console.log('  Mortes por jogador:');
         for (const [meio, total] of Object.entries(partida.killsPorMeio)) {
             console.log(`    ${meio}: ${total}`);
         }
         console.log('  assassinos:');
         // Ranking
         const assassinosOrdenados = Object.entries(partida.kills)
-            .filter(([jogador, kills]) => kills > -3) // Desconsiderar outros itens como assasinos (lava)
+            .filter(([jogador, kills]) => kills > -5) // Afim de desconsiderar outros itens como assasinos (lava/suicide) e mostrar quem está negativo
             .sort((a, b) => b[1] - a[1]);
 
         assassinosOrdenados.forEach(([jogador, kills]) => {
