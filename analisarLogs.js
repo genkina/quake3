@@ -7,7 +7,6 @@ const tiposDeMorte = require('./tiposDeMorte');
 const regexInicioJogo = /^\s*\d+:\d+\s+InitGame:/;
 const regexMatar = /^\s*\d+:\d+\s+Kill:\s+\d+\s+\d+\s+\d+:\s+(.+?)\s+killed\s+(.+?)\s+by\s+(.+)/;
 
-// Função ler log
 function analisarLog(caminhoArquivo) {
     return new Promise((resolver, rejeitar) => {
         const partidas = [];
@@ -57,23 +56,34 @@ function analisarLog(caminhoArquivo) {
 
                     partidaAtual.totalKills += 1;
 
-                    if (assassino !== '<world>') {
+                    if (assassino !== '<world>' ) {
                         partidaAtual.jogadores.add(assassino);
                         partidaAtual.kills[assassino] = (partidaAtual.kills[assassino] || 0) + 1;
+                    }
+                    else
+                    {
+                        //vitima morreu sozinha
+                        partidaAtual.jogadores.add(vitima);
+                        partidaAtual.kills[vitima] = (partidaAtual.kills[vitima] || 0) - 1;
+                        break;
                     }
                     if (vitima !== '<world>') {
                         partidaAtual.jogadores.add(vitima);
                         partidaAtual.kills[vitima] = (partidaAtual.kills[vitima] || 0) - 1;
-                    }
-
-                    // Incrementar contador de kills por meio de morte
+                    }                   
                     if (tiposDeMorte.includes(arma)) {
+                        // Incrementar contador de kills por meio de morte
                         partidaAtual.killsPorMeio[arma] += 1;
+                        partidaAtual.kills += 1;
                     }
-                    break;
+                    break;    
                 case 'Item':
                     // chamar função para printar na tela do player caso bandeira capturada
+                    break;    
+                case 'Client':
+                    // chamar função que gerencia clientes
                     break;
+              
             }
         });
 
@@ -89,7 +99,7 @@ function analisarLog(caminhoArquivo) {
         });
 
         ll.on('error', (err) => {
-            rejeitar(err);
+            rejeitar("Erro na leitura de logs: " + err);
         });
     });
 }
