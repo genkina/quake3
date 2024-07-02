@@ -1,8 +1,7 @@
-const analisarLog = require('./analisarLog');
-const gerarRelatorio = require('./gerarRelatorio');
+const gerarRelatorio = require('./controladores/controladorLog');
 
-const caminhoArquivo = '../logs/qgames.log'; // Ajuste o caminho conforme necessário
+// Caminho para o arquivo de log (modifique conforme necessário)
+const caminhoArquivo = './logs/qgames.log';
 
-analisarLog(caminhoArquivo)
-    .then(partidas => gerarRelatorio(partidas))
-    .catch(err => console.error('Erro ao analisar o arquivo de log:', err));
+// Executar o parser e gerar o relatório
+gerarRelatorio(caminhoArquivo);
